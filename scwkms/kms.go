@@ -1,4 +1,4 @@
-// A [generickms] implementation for [Scaleway Key Manager].
+// A [generickms.KMS] implementation for [Scaleway Key Manager].
 //
 // [Scaleway Key Manager]: https://www.scaleway.com/en/key-manager
 package scwkms

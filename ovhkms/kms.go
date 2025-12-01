@@ -1,4 +1,4 @@
-// A [generickms] implementation for [OVH Key Management Service].
+// A [generickms.KMS] implementation for [OVH Key Management Service].
 //
 // [OVH Key Management Service]: https://www.ovhcloud.com/en/identity-security-operations/key-management-service
 package ovhkms
