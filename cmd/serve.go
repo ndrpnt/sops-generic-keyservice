@@ -27,8 +27,7 @@ var serveCmd = &cobra.Command{
 	Use:   "serve",
 	Short: "Start the key service server",
 	Long: `Start a SOPS-compatible gRPC key service server.
-
-Usage: sops --enable-local-keyservice=false --keyservice unix:///tmp/sops.sock`,
+Configure SOPS with: sops --keyservice unix:///tmp/sops.sock`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if err := runServe(cmd, args); err != nil {
 			return fmt.Errorf("failed to start keyservice server: %v", err)
