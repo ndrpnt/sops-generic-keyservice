@@ -86,4 +86,3 @@ sops edit example.sops.yaml
 [pkgsite]: https://pkg.go.dev/github.com/ndrpnt/sops-generic-keyservice
 [scw-kms]: https://www.scaleway.com/en/key-manager
 [sops-key-service]: https://github.com/getsops/sops?tab=readme-ov-file#key-service
-[sops]: https://github.com/getsops/sops
