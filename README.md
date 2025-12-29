@@ -52,16 +52,27 @@ go install github.com/ndrpnt/sops-generic-keyservice@latest
 ```sh
 $ sops-generic-keyservice serve --help
 Start a SOPS-compatible gRPC key service server.
-Configure SOPS with: sops --keyservice unix:///tmp/sops.sock
+
+When sops-generic-keyservice runs in daemon mode,
+it prints the shell commands required to set its environment variables,
+which in turn can be evaluated in the calling shell.
+
+For example running "eval $(sops-generic-keyservice serve --kms-provider noop -d)"
+configures SOPS to use the keyservice by setting SOPS_KEYSERVICE.
 
 Usage:
   sops-generic-keyservice serve [flags]
 
 Flags:
-      --address string        listen address (for tcp) or socket path (for unix) (default "/tmp/sops.sock")
+      --address string        listen address (for tcp) or socket path (for unix) (defaults to a random port on localhost for tcp, or a temporary file for unix)
+  -d, --daemon                run in daemon mode
   -h, --help                  help for serve
       --kms-provider string   KMS provider to use (scaleway, ovh, noop)
       --network string        network type (tcp, unix) (default "unix")
+
+Global Flags:
+  -q, --quiet count     decrease verbosity
+  -v, --verbose count   increase verbosity
 ```
 
 ### Example usage with Scaleway Key Manager
@@ -71,15 +82,11 @@ Flags:
 export SCW_ACCESS_KEY=SCWXXXXXXXXXXXXXXXXX
 export SCW_SECRET_KEY=11111111-1111-1111-1111-111111111111
 
-# Start the SOPS key service server.
-sops-generic-keyservice serve --kms-provider scaleway &
+# Start the SOPS key service server and configure SOPS to use it.
+eval $(sops-generic-keyservice serve --kms-provider scaleway -d)
 
-# Configure SOPS.
-export SOPS_KMS_ARN="$(echo -n '{"id":"22222222-2222-2222-2222-222222222222","region":"fr-par"}' | base64)"
-export SOPS_KEYSERVICE=unix:///tmp/sops.sock
-
-# Create a SOPS-encrypted file.
-sops edit example.sops.yaml
+# Create a SOPS-encrypted file, specifying the key to use.
+sops edit --kms $(echo -n '{"id":"22222222-2222-2222-2222-222222222222","region":"fr-par"}' | base64) example.sops.yaml
 ```
 
 [ovh-kms]: https://www.ovhcloud.com/en/identity-security-operations/key-management-service
