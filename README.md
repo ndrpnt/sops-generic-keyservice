@@ -87,6 +87,26 @@ eval $(sops-generic-keyservice serve --kms-provider scaleway -d)
 
 # Create a SOPS-encrypted file, specifying the key to use.
 sops edit --kms $(echo -n '{"id":"22222222-2222-2222-2222-222222222222","region":"fr-par"}' | base64) example.sops.yaml
+
+# Stop the SOPS key service server.
+eval $(sops-generic-keyservice kill)
+```
+
+### Example usage with OVH KMS
+
+```sh
+# Configure OVH KMS credentials.
+export OKMS_CLIENT_CERT_FILE=cert.pem
+export OKMS_CLIENT_KEY_FILE=key.pem
+
+# Start the SOPS key service server and configure SOPS to use it.
+eval $(sops-generic-keyservice serve --kms-provider ovh -d)
+
+# Create a SOPS-encrypted file, specifying the key to use.
+sops edit --kms $(echo -n '{"okms_id":"11111111-1111-1111-1111-111111111111","key_id":"22222222-2222-2222-2222-222222222222","endpoint":"https://eu-west-par.okms.ovh.net"}' | base64) example.sops.yaml
+
+# Stop the SOPS key service server.
+eval $(sops-generic-keyservice kill)
 ```
 
 [ovh-kms]: https://www.ovhcloud.com/en/identity-security-operations/key-management-service
