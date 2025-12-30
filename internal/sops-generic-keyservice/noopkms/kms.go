@@ -4,7 +4,7 @@ package noopkms
 import (
 	"context"
 
-	"github.com/ndrpnt/sops-generic-keyservice/generickms"
+	"github.com/ndrpnt/sops-generic-keyservice/internal/sops-generic-keyservice/generickms"
 )
 
 type noopKMS struct{}

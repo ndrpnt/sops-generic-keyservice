@@ -1,4 +1,4 @@
-package cmd
+package commands
 
 import (
 	"fmt"
@@ -12,11 +12,11 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/ndrpnt/sops-generic-keyservice/generickms"
-	"github.com/ndrpnt/sops-generic-keyservice/keyservice"
-	"github.com/ndrpnt/sops-generic-keyservice/noopkms"
-	"github.com/ndrpnt/sops-generic-keyservice/ovhkms"
-	"github.com/ndrpnt/sops-generic-keyservice/scwkms"
+	"github.com/ndrpnt/sops-generic-keyservice/internal/sops-generic-keyservice/generickms"
+	"github.com/ndrpnt/sops-generic-keyservice/internal/sops-generic-keyservice/keyservice"
+	"github.com/ndrpnt/sops-generic-keyservice/internal/sops-generic-keyservice/noopkms"
+	"github.com/ndrpnt/sops-generic-keyservice/internal/sops-generic-keyservice/ovhkms"
+	"github.com/ndrpnt/sops-generic-keyservice/internal/sops-generic-keyservice/scwkms"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 )

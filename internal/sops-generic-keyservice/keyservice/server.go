@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/ndrpnt/sops-generic-keyservice/generickms"
+	"github.com/ndrpnt/sops-generic-keyservice/internal/sops-generic-keyservice/generickms"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

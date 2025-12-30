@@ -15,7 +15,7 @@ import (
 	"os"
 
 	"github.com/google/uuid"
-	"github.com/ndrpnt/sops-generic-keyservice/generickms"
+	"github.com/ndrpnt/sops-generic-keyservice/internal/sops-generic-keyservice/generickms"
 	"github.com/ovh/okms-sdk-go"
 )
 

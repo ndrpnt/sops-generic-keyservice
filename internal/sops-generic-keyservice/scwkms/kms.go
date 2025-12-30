@@ -10,7 +10,7 @@ import (
 	"io"
 	"log/slog"
 
-	"github.com/ndrpnt/sops-generic-keyservice/generickms"
+	"github.com/ndrpnt/sops-generic-keyservice/internal/sops-generic-keyservice/generickms"
 	key_manager "github.com/scaleway/scaleway-sdk-go/api/key_manager/v1alpha1"
 	"github.com/scaleway/scaleway-sdk-go/scw"
 )

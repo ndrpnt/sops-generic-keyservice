@@ -44,7 +44,7 @@ See the [individual package documentation][pkgsite] for more information.
 ## Installation
 
 ```sh
-go install github.com/ndrpnt/sops-generic-keyservice@latest
+go install github.com/ndrpnt/sops-generic-keyservice/...@latest
 ```
 
 ## Usage
