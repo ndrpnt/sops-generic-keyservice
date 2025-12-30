@@ -1,4 +1,4 @@
-// A [generickms.KMS] no-op implementation for testing.
+// Package noopkms is a [generickms.KMS] no-op implementation for testing.
 package noopkms
 
 import (

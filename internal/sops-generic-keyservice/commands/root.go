@@ -1,3 +1,4 @@
+// Package commands defines (sub)commands for the sops-generic-keyservice CLI.
 package commands
 
 import (

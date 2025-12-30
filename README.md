@@ -5,7 +5,7 @@ that enables integration with custom key management systems.
 This project allows you to use SOPS with KMS providers that aren't natively supported,
 such as [Scaleway Key Manager][scw-kms] and [OVH Key Management Service][ovh-kms].
 
-## Architecture
+## Architecture (no plugin)
 
 See the [individual package documentation][pkgsite] for more information.
 
@@ -32,7 +32,46 @@ See the [individual package documentation][pkgsite] for more information.
 │  │ implementation    │       │
 │  └─────────┬─────────┘       │
 └────────────┼─────────────────┘
-             │ HTTPS API
+             │ HTTP API
+             ▼
+ ┌────────────────────────┐
+ │ External KMS provider  │
+ │ (Scaleway Key Manager, │
+ │     OVH KMS, etc.)     │
+ └────────────────────────┘
+```
+
+## Architecture (with PluginRPC)
+
+```txt
+       ┌────────────┐
+       │    SOPS    │
+       │  (client)  │
+       └─────┬──────┘
+             │ gRPC
+             │ (Unix socket or TCP)
+             ▼
+┌──────────────────────────────┐
+│   sops-generic-keyservice    │
+│                              │
+│  ┌────────────────────┐      │
+│  │ Key Service Server │      │
+│  └─────────┬──────────┘      │
+│            │ generickms.KMS  │
+│            │ interface       │
+│            ▼                 │
+│  ┌────────────────────┐      │
+│  │  PluginRPC client  │      │
+│  └─────────┬──────────┘      │
+└────────────┼─────────────────┘
+             │ PluginRPC
+             │ (Protobuf on stdin)
+             ▼
+   ┌───────────────────┐
+   │ Provider-specific │
+   │ PluginRPC server  │
+   └───────────────────┘
+             │ HTTP API
              ▼
  ┌────────────────────────┐
  │ External KMS provider  │
@@ -67,7 +106,7 @@ Flags:
       --address string        listen address (for tcp) or socket path (for unix) (defaults to a random port on localhost for tcp, or a temporary file for unix)
   -d, --daemon                run in daemon mode
   -h, --help                  help for serve
-      --kms-provider string   KMS provider to use (scaleway, ovh, noop)
+      --kms-provider string   KMS provider to use (scaleway, ovh, pluginrpc, noop)
       --network string        network type (tcp, unix) (default "unix")
 
 Global Flags:
@@ -104,6 +143,19 @@ eval $(sops-generic-keyservice serve --kms-provider ovh -d)
 
 # Create a SOPS-encrypted file, specifying the key to use.
 sops edit --kms $(echo -n '{"okms_id":"11111111-1111-1111-1111-111111111111","key_id":"22222222-2222-2222-2222-222222222222","endpoint":"https://eu-west-par.okms.ovh.net"}' | base64) example.sops.yaml
+
+# Stop the SOPS key service server.
+eval $(sops-generic-keyservice kill)
+```
+
+### Example usage with noop PluginRPC plugin
+
+```sh
+# Start the SOPS key service server and configure SOPS to use it.
+eval $(sops-generic-keyservice serve --kms-provider pluginrpc -d)
+
+# Create a SOPS-encrypted file, specifying the key to use.
+sops edit --kms $(echo -n '{"plugin":"noop"}' | base64) example.sops.yaml
 
 # Stop the SOPS key service server.
 eval $(sops-generic-keyservice kill)

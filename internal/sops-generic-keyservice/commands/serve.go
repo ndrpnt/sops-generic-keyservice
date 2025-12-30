@@ -16,6 +16,7 @@ import (
 	"github.com/ndrpnt/sops-generic-keyservice/internal/sops-generic-keyservice/keyservice"
 	"github.com/ndrpnt/sops-generic-keyservice/internal/sops-generic-keyservice/noopkms"
 	"github.com/ndrpnt/sops-generic-keyservice/internal/sops-generic-keyservice/ovhkms"
+	"github.com/ndrpnt/sops-generic-keyservice/internal/sops-generic-keyservice/pluginrpckms"
 	"github.com/ndrpnt/sops-generic-keyservice/internal/sops-generic-keyservice/scwkms"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
@@ -47,7 +48,7 @@ func (e *enumValue) Type() string {
 var (
 	networkF     = enumValue{value: "unix", variants: []string{"tcp", "unix"}}
 	addressF     string
-	kmsProviderF = enumValue{variants: []string{"scaleway", "ovh", "noop"}}
+	kmsProviderF = enumValue{variants: []string{"scaleway", "ovh", "pluginrpc", "noop"}}
 	daemonF      bool
 )
 
@@ -76,7 +77,7 @@ func init() {
 
 	serveCmd.Flags().Var(&networkF, "network", "network type (tcp, unix)")
 	serveCmd.Flags().StringVar(&addressF, "address", "", "listen address (for tcp) or socket path (for unix) (defaults to a random port on localhost for tcp, or a temporary file for unix)")
-	serveCmd.Flags().Var(&kmsProviderF, "kms-provider", "KMS provider to use (scaleway, ovh, noop)")
+	serveCmd.Flags().Var(&kmsProviderF, "kms-provider", "KMS provider to use (scaleway, ovh, pluginrpc, noop)")
 	serveCmd.Flags().BoolVarP(&daemonF, "daemon", "d", false, "run in daemon mode")
 	serveCmd.MarkFlagRequired("kms-provider")
 }
@@ -178,11 +179,16 @@ func initializeKMS(provider string, logger *slog.Logger) (generickms.KMS, error)
 		if err != nil {
 			return nil, fmt.Errorf("failed to instantiate OVH Key Manager client: %v", err)
 		}
+	case "pluginrpc":
+		kms, err = pluginrpckms.New(logger)
+		if err != nil {
+			return nil, fmt.Errorf("failed to instantiate PluginRPC Key Manager client: %v", err)
+		}
 	case "noop":
 		kms = noopkms.New()
 		logger.Warn("Using no-op KMS provider - for testing only, does not provide real encryption")
 	default:
-		return nil, fmt.Errorf("unknown KMS provider: %s (valid options: scaleway, ovh, noop)", provider)
+		return nil, fmt.Errorf("unknown KMS provider: %s (valid options: scaleway, ovh, pluginrpc, noop)", provider)
 	}
 
 	return kms, nil
