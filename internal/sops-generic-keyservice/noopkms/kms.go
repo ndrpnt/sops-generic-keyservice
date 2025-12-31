@@ -7,14 +7,14 @@ import (
 	"github.com/ndrpnt/sops-generic-keyservice/internal/sops-generic-keyservice/generickms"
 )
 
-type noopKMS struct{}
+func New() generickms.KMS { return &kms{} }
 
-func New() generickms.KMS { return &noopKMS{} }
+type kms struct{}
 
-func (*noopKMS) Encrypt(_ context.Context, _, plaintext []byte) ([]byte, error) {
+func (*kms) Encrypt(_ context.Context, _, plaintext []byte) ([]byte, error) {
 	return plaintext, nil
 }
 
-func (*noopKMS) Decrypt(_ context.Context, _, ciphertext []byte) ([]byte, error) {
+func (*kms) Decrypt(_ context.Context, _, ciphertext []byte) ([]byte, error) {
 	return ciphertext, nil
 }
