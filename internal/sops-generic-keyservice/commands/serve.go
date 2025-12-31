@@ -108,7 +108,7 @@ func runServe(cmd *cobra.Command, args []string) error {
 
 		pid := cmd.Process.Pid
 		fmt.Printf("export SOPS_KEYSERVICE=\"$SOPS_KEYSERVICE${SOPS_KEYSERVICE:+,}%s\";\n", fullAddress)
-		fmt.Printf("export SOPS_KEYSERVICE_PID=%d;\n", pid)
+		fmt.Printf("export SOPS_KEYSERVICE_PID=\"$SOPS_KEYSERVICE_PID${SOPS_KEYSERVICE_PID:+,}%d\";\n", pid)
 		fmt.Printf("echo SOPS key service pid %d;\n", pid)
 
 		return nil
