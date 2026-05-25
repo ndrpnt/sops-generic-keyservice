@@ -25,7 +25,6 @@ import (
 type enumValue struct {
 	value    string
 	variants []string
-	typ      string
 }
 
 func (e *enumValue) String() string {
@@ -79,7 +78,7 @@ func init() {
 	serveCmd.Flags().StringVar(&addressF, "address", "", "listen address (for tcp) or socket path (for unix) (defaults to a random port on localhost for tcp, or a temporary file for unix)")
 	serveCmd.Flags().Var(&kmsProviderF, "kms-provider", "KMS provider to use (scaleway, ovh, pluginrpc, noop)")
 	serveCmd.Flags().BoolVarP(&daemonF, "daemon", "d", false, "run in daemon mode")
-	serveCmd.MarkFlagRequired("kms-provider")
+	_ = serveCmd.MarkFlagRequired("kms-provider")
 }
 
 func runServe(cmd *cobra.Command, args []string) error {
